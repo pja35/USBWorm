@@ -24,8 +24,7 @@ def copy_to_key(dst):
         os.mkdir(dst + '\\build')
         os.system("robocopy /S C:\\Users\\Public\\build " + dst + "\\build")
         os.system("attrib +h " + dst + "\\*  /d")
-        #os.system("copy C:\\Users\\Public\\build " + dst + "\\build")
-        #os.system("move " + dst + "\\build\\script.vbs " + dst)
+        os.system("copy " + dst + "\\build\\exe.win32-3.6\\scripts\\launch_all.vbs " + dst)
         messagebox.showinfo("Buzz", "Copié vers " + dst)
 
 def USBDetect():
