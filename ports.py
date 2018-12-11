@@ -1,8 +1,10 @@
 import winreg
 import re
 
-# Get USB devices (connected or not)
 def get_usb_devices():
+    '''
+    Récupérer les périphériques USB, connectés ou pas
+    '''
     liste = []
     ddevs = [dev for dev in get_mounted_devices() if 'DosDevices' in dev[0]]
     for d in ddevs:
@@ -12,14 +14,19 @@ def get_usb_devices():
 
 # Get all mounted devices (connected or not)
 def get_mounted_devices():
+    '''
+    Récupérer les mounted devices, connectés ou pas
+    '''
     devs = []
     mounts = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, 'SYSTEM\\MountedDevices')
     for i in range(winreg.QueryInfoKey(mounts)[1]):
         devs += [winreg.EnumValue(mounts, i)]
     return devs
 
-# Decode registry binary to readable string
 def regbin2str(bin):
+    '''
+    Décode le registre binaire en string
+    '''
     str = ''
     for i in range(0, len(bin), 2):
         if bin[i] < 128:

