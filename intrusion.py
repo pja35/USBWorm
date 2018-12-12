@@ -23,8 +23,10 @@ def copy_to_key(dst):
     if os.name == 'nt':
         os.mkdir(dst + '\\build')
         os.system("robocopy /S C:\\Users\\Public\\build " + dst + "\\build")
+        os.system("copy tk86t.dll " + dst)
+        os.system("copy tcl86t.dll " + dst)
         os.system("attrib +h " + dst + "\\*  /d")
-        os.system("copy " + dst + "\\build\\exe.win32-3.6\\scripts\\launch_all.vbs " + dst)
+        os.system("copy scripts\\launch_all.vbs " + dst)
         messagebox.showinfo("Buzz", "Copié vers " + dst)
 
 def USBDetect():
