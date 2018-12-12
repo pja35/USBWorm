@@ -3,7 +3,7 @@ import re
 
 def get_usb_devices():
     '''
-    Récupérer les périphériques USB, connectés ou pas
+    Récupérer la liste des périphériques de stockage USB, connectés ou pas
     '''
     liste = []
     ddevs = [dev for dev in get_mounted_devices() if 'DosDevices' in dev[0]]
@@ -12,10 +12,9 @@ def get_usb_devices():
             liste.append(d[0][-2:] + "\\")
     return liste
 
-# Get all mounted devices (connected or not)
 def get_mounted_devices():
     '''
-    Récupérer les mounted devices, connectés ou pas
+    Récupérer la liste des périphériques, connectés ou pas
     '''
     devs = []
     mounts = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, 'SYSTEM\\MountedDevices')
